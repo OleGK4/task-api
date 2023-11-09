@@ -22,6 +22,12 @@ Go to the project directory
   cd task-api
 ```
 
+Install composer
+
+```bash
+  composer install
+```
+
 Set the alias
 
 ```bash
@@ -32,12 +38,6 @@ Start the project in detached mode
 
 ```bash
   sail up -d
-```
-
-Update composer
-
-```bash
-  sail composer update
 ```
 
 Migrate your database
