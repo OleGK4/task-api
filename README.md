@@ -19,7 +19,13 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd task-api
+```
+
+Install composer
+
+```bash
+  composer install
 ```
 
 Set the alias
@@ -32,12 +38,6 @@ Start the project in detached mode
 
 ```bash
   sail up -d
-```
-
-Update composer
-
-```bash
-  sail composer update
 ```
 
 Migrate your database
