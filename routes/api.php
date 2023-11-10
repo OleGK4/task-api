@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NoteController;
+use App\Http\Resources\NoteCollection;
+use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +18,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+// Authentication
+Route::prefix('auth')->group(function () {
+    Route::post('/signup', [AuthController::class, 'signup']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
+
+// Notes interaction
+
+//Route::get('/cards', function () {
+//    return new NoteCollection(Note::paginate());
+//});
+
+Route::get('notes', [NoteController::class, 'index']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('note', NoteController::class);
+});
+
+

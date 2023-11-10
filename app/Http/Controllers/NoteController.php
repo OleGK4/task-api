@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\NoteCollection;
+use App\Http\Resources\NoteResource;
 use App\Models\Note;
 use Illuminate\Http\Request;
 
@@ -12,7 +14,7 @@ class NoteController extends Controller
      */
     public function index()
     {
-        //
+        return new NoteCollection(Note::paginate(5));
     }
 
     /**
@@ -23,29 +25,15 @@ class NoteController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
      */
     public function show(Note $note)
     {
-        //
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Note $note)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.

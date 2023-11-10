@@ -13,7 +13,7 @@ class NotePolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+
     }
 
     /**
@@ -48,13 +48,6 @@ class NotePolicy
         //
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Note $note): bool
-    {
-        //
-    }
 
     /**
      * Determine whether the user can permanently delete the model.
