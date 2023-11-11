@@ -11,56 +11,51 @@ class NoteTagPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $user, NoteTag $noteTag): Response
     {
-        //
+        return $user->id === $noteTag->note->user_id
+            ? Response::allow()
+            : Response::deny('You do not own this note.');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, NoteTag $noteTag): bool
+    public function view(User $user, NoteTag $noteTag): Response
     {
-        //
+        return $user->id === $noteTag->note->user_id
+            ? Response::allow()
+            : Response::deny('You do not own this note.');
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user, NoteTag $noteTag): Response
     {
-        //
+        return $user->id === $noteTag->note->user_id
+            ? Response::allow()
+            : Response::deny('You do not own this note.');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, NoteTag $noteTag): bool
+    public function update(User $user, NoteTag $noteTag): Response
     {
-        //
+        return $user->id === $noteTag->note->user_id
+            ? Response::allow()
+            : Response::deny('You do not own this note.');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, NoteTag $noteTag): bool
+    public function delete(User $user, NoteTag $noteTag): Response
     {
-        //
+        return $user->id === $noteTag->note->user_id
+            ? Response::allow()
+            : Response::deny('You do not own this note.');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, NoteTag $noteTag): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, NoteTag $noteTag): bool
-    {
-        //
-    }
 }

@@ -19,9 +19,11 @@ class NotePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Note $note): bool
+    public function view(User $user, Note $note): Response
     {
-        //
+        return $user->id === $note->user_id
+                ? Response::allow()
+                : Response::deny('You do not own this note.');
     }
 
     /**
@@ -35,25 +37,20 @@ class NotePolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Note $note): bool
+    public function update(User $user, Note $note): Response
     {
-        //
+        return $user->id === $note->user_id
+                ? Response::allow()
+                : Response::deny('You do not own this note.');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Note $note): bool
+    public function delete(User $user, Note $note): Response
     {
-        //
-    }
-
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Note $note): bool
-    {
-        //
+        return $user->id === $note->user_id
+            ? Response::allow()
+            : Response::deny('You do not own this note.');
     }
 }

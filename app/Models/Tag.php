@@ -11,6 +11,10 @@ class Tag extends Model
     use HasFactory;
     public $timestamps = false;
 
+    protected $fillable = [
+        'name'
+    ];
+
     public function noteTags(): HasMany
     {
         return $this->hasMany( NoteTag::class);
