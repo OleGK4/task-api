@@ -3,7 +3,6 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\NoteTagController;
-use App\Http\Controllers\TagController;
 use App\Http\Resources\NoteCollection;
 use App\Models\Note;
 use Illuminate\Http\Request;
@@ -36,7 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [NoteController::class, 'store']);
 
         Route::prefix('find')->group(function () {
-            Route::get('{search_tag}', [NoteController::class, 'showByTag']); // Search by tag
+            Route::get('{search_tag}', [NoteController::class, 'showByTag']); // Search by tag or multiple tags
         });
 
         Route::prefix('{note}')->group(function () {
@@ -49,7 +48,6 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::post('/', [NoteTagController::class, 'store']);
 
                 Route::prefix('{tag}')->group(function () {
-                    Route::put('/', [NoteTagController::class, 'update']);
                     Route::delete('/', [NoteTagController::class, 'destroy']);
                     Route::get('/', [NoteTagController::class, 'show']);
                 });

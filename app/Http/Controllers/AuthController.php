@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -27,8 +26,15 @@ class AuthController extends Controller
      *             ),
      *         ),
      *     ),
-     *     @OA\Response(response="201", description="User registered successfully"),
-     *     @OA\Response(response="422", description="Validation error"),
+     *     @OA\Response(
+     *        response=201,
+     *        description="User registered successfully",
+     *        @OA\JsonContent(
+     *           @OA\Property(property="user", type="object", ref="#/components/schemas/UserResource"),
+     *           @OA\Property(property="access_token", type="string", description="Bearer token for authentication"),
+     *        ),
+     *     ),
+     *     @OA\Response(response=422, description="Validation error"),
      * )
      */
 
@@ -75,8 +81,20 @@ class AuthController extends Controller
      *             ),
      *         ),
      *     ),
-     *     @OA\Response(response="200", description="Login successful"),
-     *     @OA\Response(response="401", description="Invalid credentials"),
+     *     @OA\Response(
+     *        response=200,
+     *        description="Login successful",
+     *        @OA\JsonContent(
+     *           @OA\Property(property="user", type="object", ref="#/components/schemas/UserResource"),
+     *           @OA\Property(property="access_token", type="string", description="Bearer token for authentication"),
+     *        ),
+     *        @OA\Header(
+     *           header="Authorization",
+     *           description="Bearer {access_token}",
+     *           @OA\Schema(type="string"),
+     *        ),
+     *     ),
+     *     @OA\Response(response=401, description="Invalid credentials"),
      * )
      */
 

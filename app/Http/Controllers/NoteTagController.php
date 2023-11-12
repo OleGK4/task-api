@@ -9,12 +9,26 @@ use App\Models\Note;
 use App\Models\NoteTag;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class NoteTagController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+    /**
+     * @OA\Get(
+     *     path="/api/notes/{note}/tags",
+     *     summary="Display tags associated with the specified note",
+     *     @OA\Parameter(name="note", in="path", required=true, description="ID of the note", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="Note tags paginated successfully", @OA\JsonContent(ref="#/components/schemas/NoteTagResource")),
+     *     @OA\Response(response="403", description="You do not own this note."),
+     *     @OA\Response(response="404", description="Note not found."),
+     *     security={{"passport": {}}}
+     * )
+     */
+
     public function index(Request $request)
     {
         $note = Note::find($request->note);
@@ -36,9 +50,40 @@ class NoteTagController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+    /**
+     * @OA\Post(
+     *     path="/api/notes/{note}/tags",
+     *     summary="Add a tag to the specified note",
+     *     @OA\Parameter(name="note", in="path", required=true, description="ID of the note", @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string"),
+     *         ),
+     *     ),
+     *     @OA\Response(response="201", description="Note tag created successfully", @OA\JsonContent(ref="#/components/schemas/NoteTagResource")),
+     *     @OA\Response(response="403", description="You do not own this note."),
+     *     @OA\Response(response="404", description="Note not found."),
+     *     security={{"passport": {}}}
+     * )
+     */
+
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
         $note = Note::find($request->note);
+
         if (empty($note)) {
             return response()->json([
                 'message' => 'Note not found'
@@ -66,6 +111,20 @@ class NoteTagController extends Controller
     /**
      * Display the specified resource.
      */
+
+    /**
+     * @OA\Get(
+     *     path="/api/notes/{note}/tags/{tag}",
+     *     summary="Display the specified note tag",
+     *     @OA\Parameter(name="note", in="path", required=true, description="ID of the note", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="tag", in="path", required=true, description="ID of the tag", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="Note tag retrieved successfully", @OA\JsonContent(ref="#/components/schemas/NoteTagResource")),
+     *     @OA\Response(response="403", description="You do not own this note."),
+     *     @OA\Response(response="404", description="Note tag or note not found."),
+     *     security={{"passport": {}}}
+     * )
+     */
+
     public function show(Request $request)
     {
         $note = Note::find($request->note);
@@ -93,6 +152,19 @@ class NoteTagController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    /**
+     * @OA\Delete(
+     *     path="/api/notes/{note}/tags/{tag}",
+     *     summary="Remove the specified note tag",
+     *     @OA\Parameter(name="note", in="path", required=true, description="ID of the note", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="tag", in="path", required=true, description="ID of the tag", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="Note tag deleted successfully"),
+     *     @OA\Response(response="403", description="You do not own this note."),
+     *     @OA\Response(response="404", description="Note tag or note not found."),
+     *     security={{"passport": {}}}
+     * )
+     */
+
     public function destroy(Request $request)
     {
         $note = Note::find($request->note);
@@ -109,12 +181,16 @@ class NoteTagController extends Controller
         }
 
         $noteTag = NoteTag::find($request->tag);
-        $tag = $noteTag->tag();
-
-        $noteTag->delete();
-        $tag->delete();
+        if (!empty($noteTag)) {
+            $tag = $noteTag->tag();
+            $noteTag->delete();
+            $tag->delete();
+            return response()->json([
+                'message' => 'Tag deleted'
+            ], 200);
+        }
         return response()->json([
-            'message' => 'Tag deleted'
-        ], 200);
+            'message' => 'Tag not found'
+        ], 404);
     }
 }

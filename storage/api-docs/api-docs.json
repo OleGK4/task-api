@@ -35,7 +35,23 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "User registered successfully"
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        },
+                                        "access_token": {
+                                            "description": "Bearer token for authentication",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
                         "description": "Validation error"
@@ -67,7 +83,31 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Login successful"
+                        "description": "Login successful",
+                        "headers": {
+                            "Authorization": {
+                                "description": "Bearer {access_token}",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        },
+                                        "access_token": {
+                                            "description": "Bearer token for authentication",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Invalid credentials"
@@ -85,9 +125,500 @@
                     }
                 }
             }
+        },
+        "/api/notes": {
+            "get": {
+                "summary": "Display a listing of the resource",
+                "operationId": "9a95bde5931986ad60b9f7f414ec425e",
+                "responses": {
+                    "200": {
+                        "description": "Notes paginated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoteResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No notes found."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Store a newly created resource in storage",
+                "operationId": "d133c170557b4935898f2e444e0fd418",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "text": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Note created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoteResource"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "You do not own this note."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/notes/{note}": {
+            "get": {
+                "summary": "Display the specified note",
+                "operationId": "e0f1599bca9af5cb49cb71f256ad31aa",
+                "parameters": [
+                    {
+                        "name": "note",
+                        "in": "path",
+                        "description": "ID of the note",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Note retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoteResource"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "You do not own this note."
+                    },
+                    "404": {
+                        "description": "Note not found."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "put": {
+                "summary": "Update the specified note",
+                "operationId": "a8fbf2764bddfa0b61a000b3d2b77721",
+                "parameters": [
+                    {
+                        "name": "note",
+                        "in": "path",
+                        "description": "ID of the note",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "text": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Note updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoteResource"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "You do not own this note."
+                    },
+                    "404": {
+                        "description": "Note not found."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "delete": {
+                "summary": "Remove the specified note",
+                "operationId": "7f894d7b4f10aa080ffb3a1b2ebc5281",
+                "parameters": [
+                    {
+                        "name": "note",
+                        "in": "path",
+                        "description": "ID of the note",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Note deleted successfully"
+                    },
+                    "403": {
+                        "description": "You do not own this note."
+                    },
+                    "404": {
+                        "description": "Note not found."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/notes/find/{search_tag}": {
+            "get": {
+                "summary": "Search notes by tag or multiple tags",
+                "operationId": "21d0f7723c5411a59ea9a1c44935eb33",
+                "parameters": [
+                    {
+                        "name": "search_tag",
+                        "in": "path",
+                        "description": "Tag or multiple tags to search by. Example: (personal1&tag2&family)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notes found successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoteResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No notes found."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/notes/{note}/tags": {
+            "get": {
+                "summary": "Display tags associated with the specified note",
+                "operationId": "ae5c4e3d830ddbbbd1f6ff867bae99ce",
+                "parameters": [
+                    {
+                        "name": "note",
+                        "in": "path",
+                        "description": "ID of the note",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Note tags paginated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoteTagResource"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "You do not own this note."
+                    },
+                    "404": {
+                        "description": "Note not found."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Add a tag to the specified note",
+                "operationId": "4d6f9ef04f1ede514539fbc4e117cddb",
+                "parameters": [
+                    {
+                        "name": "note",
+                        "in": "path",
+                        "description": "ID of the note",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Note tag created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoteTagResource"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "You do not own this note."
+                    },
+                    "404": {
+                        "description": "Note not found."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/notes/{note}/tags/{tag}": {
+            "get": {
+                "summary": "Display the specified note tag",
+                "operationId": "2d0eaf4c2fa9ee5ec988e590aa61b2f8",
+                "parameters": [
+                    {
+                        "name": "note",
+                        "in": "path",
+                        "description": "ID of the note",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "tag",
+                        "in": "path",
+                        "description": "ID of the tag",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Note tag retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoteTagResource"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "You do not own this note."
+                    },
+                    "404": {
+                        "description": "Note tag or note not found."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "delete": {
+                "summary": "Remove the specified note tag",
+                "operationId": "9372b51ba1b478a254bfc0127e0c3612",
+                "parameters": [
+                    {
+                        "name": "note",
+                        "in": "path",
+                        "description": "ID of the note",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "tag",
+                        "in": "path",
+                        "description": "ID of the tag",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Note tag deleted successfully"
+                    },
+                    "403": {
+                        "description": "You do not own this note."
+                    },
+                    "404": {
+                        "description": "Note tag or note not found."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
         }
     },
     "components": {
+        "schemas": {
+            "NoteResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NoteTagResource"
+                        }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "NoteTagResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "tag": {
+                        "$ref": "#/components/schemas/TagResource"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "TagResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "UserResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "notes": {
+                        "$ref": "#/components/schemas/NoteResource"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",

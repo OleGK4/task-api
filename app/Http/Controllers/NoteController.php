@@ -2,17 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\NoteCollection;
-use App\Http\Resources\NoteResource;
 use App\Models\Note;
+use App\Models\NoteTag;
+use App\Models\Tag;
 use Illuminate\Http\Request;
-use Psy\Util\Json;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\NoteResource;
+use App\Http\Resources\NoteCollection;
 
 class NoteController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+    /**
+     * @OA\Get(
+     *     path="/api/notes",
+     *     summary="Display a listing of the resource",
+     *     @OA\Response(response="200", description="Notes paginated successfully", @OA\JsonContent(ref="#/components/schemas/NoteResource")),
+     *     @OA\Response(response="404", description="No notes found."),
+     *     security={{"passport": {}}}
+     * )
+     */
+
     public function index(Request $request)
     {
         $userNotes = $request->user()->notes()->paginate(5);
@@ -29,13 +42,44 @@ class NoteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+    /**
+     * @OA\Post(
+     *     path="/api/notes",
+     *     summary="Store a newly created resource in storage",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="title", type="string"),
+     *             @OA\Property(property="text", type="string"),
+     *         ),
+     *     ),
+     *     @OA\Response(response="201", description="Note created successfully", @OA\JsonContent(ref="#/components/schemas/NoteResource")),
+     *     @OA\Response(response="403", description="You do not own this note."),
+     *     security={{"passport": {}}}
+     * )
+     */
+
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'text' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
         $note = Note::create([
             'title' => $request->title,
             'text' => $request->text,
             'user_id' => $request->user()->id,
         ]);
+
         return response()->json([
             'note' => $note
         ], 201);
@@ -45,6 +89,18 @@ class NoteController extends Controller
     /**
      * Display the specified resource.
      */
+    /**
+     * @OA\Get(
+     *     path="/api/notes/{note}",
+     *     summary="Display the specified note",
+     *     @OA\Parameter(name="note", in="path", required=true, description="ID of the note", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="Note retrieved successfully", @OA\JsonContent(ref="#/components/schemas/NoteResource")),
+     *     @OA\Response(response="403", description="You do not own this note."),
+     *     @OA\Response(response="404", description="Note not found."),
+     *     security={{"passport": {}}}
+     * )
+     */
+
     public function show(Request $request)
     {
         $note = Note::find($request->note);
@@ -62,45 +118,78 @@ class NoteController extends Controller
         return new NoteResource($note);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/notes/find/{search_tag}",
+     *     summary="Search notes by tag or multiple tags",
+     *     @OA\Parameter(name="search_tag", in="path", required=true, description="Tag or multiple tags to search by. Example: (personal1&tag2&family)", @OA\Schema(type="string")),
+     *     @OA\Response(response="200", description="Notes found successfully", @OA\JsonContent(ref="#/components/schemas/NoteResource")),
+     *     @OA\Response(response="404", description="No notes found."),
+     *     security={{"passport": {}}}
+     * )
+     */
 
     public function showByTag(Request $request)
     {
-        // Not done yet!
+        $searchTags = $request->search_tag;
+        $searchTagsArray = explode('&', $searchTags); // Convert the tags into an array
 
-//        $tags = $request->search_tag;
-//
-//        // Convert the comma-separated tags into an array
-//        $tagsArray = explode('$', $tags);
-//
-//
-//        dump($tagsArray);
-//        dd($tags);
-//
-//
-//        $note = Note::find($request->note);
-//        if (empty($note)) {
-//            return response()->json([
-//                'message' => 'Note not found'
-//            ], 404);
-//        }
-//
-//        if ($request->user()->cannot('view', $note)) {
-//            return response()->json([
-//                'message' => 'You do not own this note.'
-//            ], 403);
-//        }
-//        return new NoteResource($note);
+        $notes = [];
+        foreach ($searchTagsArray as $tag) {
+            $tagQuery = Tag::where('name', 'like', $tag)->get();
+            if (!empty($tagQuery)) {
+                foreach ($tagQuery as $copyOfTag) {
+                    $noteTag = NoteTag::where('tag_id', $copyOfTag->id)->first();
+                    if (!empty($noteTag)) {
+                        $note = $noteTag->note()->first();
+                        array_push($notes, $note);
+                    }
+                }
+            }
+        }
+        return new NoteCollection($notes);
     }
-
 
 
 
     /**
      * Update the specified resource in storage.
      */
+    /**
+     * @OA\Put(
+     *     path="/api/notes/{note}",
+     *     summary="Update the specified note",
+     *     @OA\Parameter(name="note", in="path", required=true, description="ID of the note", @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="title", type="string"),
+     *             @OA\Property(property="text", type="string"),
+     *         ),
+     *     ),
+     *     @OA\Response(response="200", description="Note updated successfully", @OA\JsonContent(ref="#/components/schemas/NoteResource")),
+     *     @OA\Response(response="403", description="You do not own this note."),
+     *     @OA\Response(response="404", description="Note not found."),
+     *     security={{"passport": {}}}
+     * )
+     */
+
     public function update(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'title' => 'sometimes|string|max:255',
+            'text' => 'sometimes|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
         $note = Note::find($request->note);
+
         if (empty($note)) {
             return response()->json([
                 'message' => 'Note not found'
@@ -113,12 +202,12 @@ class NoteController extends Controller
             ], 403);
         }
 
-        if ($request->title) {
+        if ($request->filled('title')) {
             $note->update([
                 'title' => $request->title,
             ]);
         }
-        if ($request->text) {
+        if ($request->filled('text')) {
             $note->update([
                 'text' => $request->text,
             ]);
@@ -130,9 +219,22 @@ class NoteController extends Controller
     }
 
 
+
     /**
      * Remove the specified resource from storage.
      */
+    /**
+     * @OA\Delete(
+     *     path="/api/notes/{note}",
+     *     summary="Remove the specified note",
+     *     @OA\Parameter(name="note", in="path", required=true, description="ID of the note", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="Note deleted successfully"),
+     *     @OA\Response(response="403", description="You do not own this note."),
+     *     @OA\Response(response="404", description="Note not found."),
+     *     security={{"passport": {}}}
+     * )
+     */
+
     public function destroy(Request $request)
     {
         $note = Note::find($request->note);
