@@ -147,7 +147,7 @@
                 },
                 "security": [
                     {
-                        "passport": []
+                        "bearerAuth": []
                     }
                 ]
             },
@@ -189,7 +189,7 @@
                 },
                 "security": [
                     {
-                        "passport": []
+                        "bearerAuth": []
                     }
                 ]
             }
@@ -229,7 +229,7 @@
                 },
                 "security": [
                     {
-                        "passport": []
+                        "bearerAuth": []
                     }
                 ]
             },
@@ -285,7 +285,7 @@
                 },
                 "security": [
                     {
-                        "passport": []
+                        "bearerAuth": []
                     }
                 ]
             },
@@ -316,7 +316,7 @@
                 },
                 "security": [
                     {
-                        "passport": []
+                        "bearerAuth": []
                     }
                 ]
             }
@@ -353,7 +353,7 @@
                 },
                 "security": [
                     {
-                        "passport": []
+                        "bearerAuth": []
                     }
                 ]
             }
@@ -393,7 +393,7 @@
                 },
                 "security": [
                     {
-                        "passport": []
+                        "bearerAuth": []
                     }
                 ]
             },
@@ -446,7 +446,7 @@
                 },
                 "security": [
                     {
-                        "passport": []
+                        "bearerAuth": []
                     }
                 ]
             }
@@ -495,7 +495,7 @@
                 },
                 "security": [
                     {
-                        "passport": []
+                        "bearerAuth": []
                     }
                 ]
             },
@@ -535,7 +535,7 @@
                 },
                 "security": [
                     {
-                        "passport": []
+                        "bearerAuth": []
                     }
                 ]
             }
