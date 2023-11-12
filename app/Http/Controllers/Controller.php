@@ -8,7 +8,8 @@ use Illuminate\Routing\Controller as BaseController;
 
 /**
  * @OA\Info(
- *    title="Swagger with Laravel",
+ *    title="Swagger documentation for task-API",
+ *    description="Notes API service, main project -> https://github.com/OleGK4/task-api.git",
  *    version="1.0.0",
  * )
  * @OA\SecurityScheme(
