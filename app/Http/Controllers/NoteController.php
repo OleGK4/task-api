@@ -22,13 +22,35 @@ class NoteController extends Controller
      *     summary="Display a listing of the resource",
      *     @OA\Response(response="200", description="Notes paginated successfully", @OA\JsonContent(ref="#/components/schemas/NoteResource")),
      *     @OA\Response(response="404", description="No notes found."),
-     *     security={{"passport": {}}}
+     *     security={{"bearerAuth": {}}}
      * )
      */
 
     public function index(Request $request)
     {
         $userNotes = $request->user()->notes()->paginate(5);
+
+        if ($userNotes->count() > 0) {
+            return new NoteCollection($userNotes);
+        } else {
+            return response()->json([
+                'message' => 'No notes found.'
+            ], 404);
+        }
+    }
+    /**
+     * @OA\Get(
+     *     path="/api/notes/filter",
+     *     summary="Display a listing of the resource, ordered by date",
+     *     @OA\Response(response="200", description="Notes paginated successfully", @OA\JsonContent(ref="#/components/schemas/NoteResource")),
+     *     @OA\Response(response="404", description="No notes found."),
+     *     security={{"bearerAuth": {}}}
+     * )
+     */
+
+    public function orderByDate(Request $request)
+    {
+        $userNotes = $request->user()->notes()->orderBy('created_at', 'desc')->paginate(5);
 
         if ($userNotes->count() > 0) {
             return new NoteCollection($userNotes);
@@ -56,9 +78,11 @@ class NoteController extends Controller
      *     ),
      *     @OA\Response(response="201", description="Note created successfully", @OA\JsonContent(ref="#/components/schemas/NoteResource")),
      *     @OA\Response(response="403", description="You do not own this note."),
-     *     security={{"passport": {}}}
+     *     security={{"bearerAuth": {}}}
      * )
      */
+
+
 
     public function store(Request $request)
     {
@@ -97,7 +121,7 @@ class NoteController extends Controller
      *     @OA\Response(response="200", description="Note retrieved successfully", @OA\JsonContent(ref="#/components/schemas/NoteResource")),
      *     @OA\Response(response="403", description="You do not own this note."),
      *     @OA\Response(response="404", description="Note not found."),
-     *     security={{"passport": {}}}
+     *     security={{"bearerAuth": {}}}
      * )
      */
 
@@ -125,7 +149,7 @@ class NoteController extends Controller
      *     @OA\Parameter(name="search_tag", in="path", required=true, description="Tag or multiple tags to search by. Example: (personal1&tag2&family)", @OA\Schema(type="string")),
      *     @OA\Response(response="200", description="Notes found successfully", @OA\JsonContent(ref="#/components/schemas/NoteResource")),
      *     @OA\Response(response="404", description="No notes found."),
-     *     security={{"passport": {}}}
+     *     security={{"bearerAuth": {}}}
      * )
      */
 
@@ -170,7 +194,7 @@ class NoteController extends Controller
      *     @OA\Response(response="200", description="Note updated successfully", @OA\JsonContent(ref="#/components/schemas/NoteResource")),
      *     @OA\Response(response="403", description="You do not own this note."),
      *     @OA\Response(response="404", description="Note not found."),
-     *     security={{"passport": {}}}
+     *     security={{"bearerAuth": {}}}
      * )
      */
 
@@ -231,7 +255,7 @@ class NoteController extends Controller
      *     @OA\Response(response="200", description="Note deleted successfully"),
      *     @OA\Response(response="403", description="You do not own this note."),
      *     @OA\Response(response="404", description="Note not found."),
-     *     security={{"passport": {}}}
+     *     security={{"bearerAuth": {}}}
      * )
      */
 

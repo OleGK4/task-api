@@ -38,6 +38,10 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('{search_tag}', [NoteController::class, 'showByTag']); // Search by tag or multiple tags
         });
 
+        Route::prefix('filter')->group(function () {
+            Route::get('/', [NoteController::class, 'orderByDate']);
+        });
+
         Route::prefix('{note}')->group(function () {
             Route::get('/', [NoteController::class, 'show']);
             Route::put('/', [NoteController::class, 'update']);

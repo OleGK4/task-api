@@ -1,7 +1,8 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Swagger with Laravel",
+        "title": "Swagger documentation for task-API",
+        "description": "Notes API service, main project -> https://github.com/OleGK4/task-api.git",
         "version": "1.0.0"
     },
     "paths": {
@@ -185,6 +186,32 @@
                     },
                     "403": {
                         "description": "You do not own this note."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/notes/filter": {
+            "get": {
+                "summary": "Display a listing of the resource, ordered by date",
+                "operationId": "0a2662c157c5770301858d85e54ddceb",
+                "responses": {
+                    "200": {
+                        "description": "Notes paginated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoteResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No notes found."
                     }
                 },
                 "security": [

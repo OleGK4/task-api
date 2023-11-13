@@ -25,7 +25,7 @@ class NoteTagController extends Controller
      *     @OA\Response(response="200", description="Note tags paginated successfully", @OA\JsonContent(ref="#/components/schemas/NoteTagResource")),
      *     @OA\Response(response="403", description="You do not own this note."),
      *     @OA\Response(response="404", description="Note not found."),
-     *     security={{"passport": {}}}
+     *     security={{"bearerAuth": {}}}
      * )
      */
 
@@ -65,7 +65,7 @@ class NoteTagController extends Controller
      *     @OA\Response(response="201", description="Note tag created successfully", @OA\JsonContent(ref="#/components/schemas/NoteTagResource")),
      *     @OA\Response(response="403", description="You do not own this note."),
      *     @OA\Response(response="404", description="Note not found."),
-     *     security={{"passport": {}}}
+     *     security={{"bearerAuth": {}}}
      * )
      */
 
@@ -121,7 +121,7 @@ class NoteTagController extends Controller
      *     @OA\Response(response="200", description="Note tag retrieved successfully", @OA\JsonContent(ref="#/components/schemas/NoteTagResource")),
      *     @OA\Response(response="403", description="You do not own this note."),
      *     @OA\Response(response="404", description="Note tag or note not found."),
-     *     security={{"passport": {}}}
+     *     security={{"bearerAuth": {}}}
      * )
      */
 
@@ -161,7 +161,7 @@ class NoteTagController extends Controller
      *     @OA\Response(response="200", description="Note tag deleted successfully"),
      *     @OA\Response(response="403", description="You do not own this note."),
      *     @OA\Response(response="404", description="Note tag or note not found."),
-     *     security={{"passport": {}}}
+     *     security={{"bearerAuth": {}}}
      * )
      */
 
