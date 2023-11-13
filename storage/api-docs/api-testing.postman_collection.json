@@ -30,12 +30,21 @@
 							}
 						}
 					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\":\"name\",\n    \"email\":\"emailllll@gmail.com\",\n    \"password\":\"password\",\n    \"password_confirmation\":\"password\"\n}",
+							"raw": "{\n    \"name\":\"name\",\n    \"email\":\"emailllllllll@gmail.com\",\n    \"password\":\"password\",\n    \"password_confirmation\":\"password\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -75,10 +84,16 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"emailllll@gmail.com\",\n    \"password\":\"password\"\n}",
+							"raw": "{\n    \"email\": \"emailllll@gmail.com\",\n    \"password\": \"password\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -236,10 +251,16 @@
 									]
 								},
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\":\"FACTORYYYYYYYYYYYY\"   \n}",
+									"raw": "{\n\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -247,13 +268,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{host}}/notes/105/tags/",
+									"raw": "{{host}}/notes/102/tags/",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"notes",
-										"105",
+										"102",
 										"tags",
 										""
 									]
@@ -323,7 +344,13 @@
 							]
 						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{host}}/notes/find/FACTORY",
 							"host": [
@@ -456,7 +483,13 @@
 							]
 						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{    \n    \"title\":\"Oh my first blood!\",\n    \"text\":\"An awesome text for my note!\"\n}",
@@ -507,10 +540,16 @@
 							]
 						},
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{    \n    \"text\":\"An awesome text for my note!!!!!\"\n}",
+							"raw": "{    \n    \"title\":\"Such a nice header!\",\n    \"text\": \"An awesome text for my note!!!!! YEAAH!\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -518,13 +557,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/notes/105",
+							"raw": "{{host}}/notes/102",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"notes",
-								"105"
+								"102"
 							]
 						},
 						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."

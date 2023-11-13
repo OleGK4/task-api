@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreNoteRequest;
+use App\Http\Requests\UpdateNoteRequest;
 use App\Models\Note;
 use App\Models\NoteTag;
 use App\Models\Tag;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\NoteResource;
 use App\Http\Resources\NoteCollection;
 
@@ -48,7 +49,7 @@ class NoteController extends Controller
      * )
      */
 
-    public function orderByDate(Request $request)
+    public function filterByDate(Request $request)
     {
         $userNotes = $request->user()->notes()->orderBy('created_at', 'desc')->paginate(5);
 
@@ -84,23 +85,12 @@ class NoteController extends Controller
 
 
 
-    public function store(Request $request)
+    public function store(StoreNoteRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'text' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validation error',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
+        $validated = $request->validated();
         $note = Note::create([
-            'title' => $request->title,
-            'text' => $request->text,
+            'title' => $validated['title'],
+            'text' => $validated['text'],
             'user_id' => $request->user()->id,
         ]);
 
@@ -198,20 +188,9 @@ class NoteController extends Controller
      * )
      */
 
-    public function update(Request $request)
+    public function update(UpdateNoteRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'sometimes|string|max:255',
-            'text' => 'sometimes|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validation error',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
+        $validated = $request->validated();
         $note = Note::find($request->note);
 
         if (empty($note)) {
@@ -228,12 +207,12 @@ class NoteController extends Controller
 
         if ($request->filled('title')) {
             $note->update([
-                'title' => $request->title,
+                'title' => $validated['title'],
             ]);
         }
         if ($request->filled('text')) {
             $note->update([
-                'text' => $request->text,
+                'text' => $validated['text'],
             ]);
         }
 

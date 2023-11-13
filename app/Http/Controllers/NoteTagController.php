@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Requests\StoreNoteTagRequest;
 use App\Http\Resources\NoteTagCollection;
 use App\Http\Resources\NoteTagResource;
 use App\Models\Note;
 use App\Models\NoteTag;
 use App\Models\Tag;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class NoteTagController extends Controller
 {
@@ -69,19 +69,9 @@ class NoteTagController extends Controller
      * )
      */
 
-    public function store(Request $request)
+    public function store(StoreNoteTagRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validation error',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
+        $validated = $request->validated();
         $note = Note::find($request->note);
 
         if (empty($note)) {
@@ -97,7 +87,7 @@ class NoteTagController extends Controller
         }
 
         $tag = Tag::create([
-            'name' => $request->name
+            'name' => $validated['name']
         ]);
 
         $noteTag = NoteTag::create([
