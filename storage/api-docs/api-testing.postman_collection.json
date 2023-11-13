@@ -367,6 +367,34 @@
 					"response": []
 				},
 				{
+					"name": "filter by date (desc)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/notes/filter",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"notes",
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "all user's notes",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
