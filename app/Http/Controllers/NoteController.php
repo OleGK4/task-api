@@ -150,8 +150,8 @@ class NoteController extends Controller
 
         $notes = [];
         foreach ($searchTagsArray as $tag) {
-            $tagQuery = Tag::where('name', 'like', $tag)->get();
-            if (!empty($tagQuery)) {
+            $tagQuery = Tag::where('name', 'LIKE', '%' . $tag . '%')->get();
+            if (!empty($tagQuery[0])) {
                 foreach ($tagQuery as $copyOfTag) {
                     $noteTag = NoteTag::where('tag_id', $copyOfTag->id)->first();
                     if (!empty($noteTag)) {
@@ -161,7 +161,12 @@ class NoteController extends Controller
                 }
             }
         }
-        return new NoteCollection($notes);
+        if (!empty($notes[0])){
+            return new NoteCollection($notes);
+        }
+        return response()->json([
+            'message' => 'Notes with tag(s) not found'
+        ], 404);
     }
 
 
