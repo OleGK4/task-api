@@ -35,21 +35,17 @@ class TagPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Tag $tag): Response
+    public function update(User $user, Tag $tag): Bool
     {
-        return $user->id === $tag->noteTags->note->user_id
-            ? Response::allow()
-            : Response::deny('You do not own this tag & note.');
+        return $user->id === $tag->noteTags->note->user_id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Tag $tag): Response
+    public function delete(User $user, Tag $tag): Bool
     {
-        return $user->id === $tag->noteTags->note->user_id
-            ? Response::allow()
-            : Response::deny('You do not own this tag & note.');
+        return $user->id === $tag->noteTags->note->user_id;
     }
 
 /**

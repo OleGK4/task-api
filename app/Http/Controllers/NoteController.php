@@ -34,9 +34,7 @@ class NoteController extends Controller
         if ($userNotes->count() > 0) {
             return new NoteCollection($userNotes);
         } else {
-            return response()->json([
-                'message' => 'No notes found.'
-            ], 404);
+            return $this->respondWithError('No notes not found', 404, ['note' => 'No notes not found']);
         }
     }
     /**
@@ -56,9 +54,7 @@ class NoteController extends Controller
         if ($userNotes->count() > 0) {
             return new NoteCollection($userNotes);
         } else {
-            return response()->json([
-                'message' => 'No notes found.'
-            ], 404);
+            return $this->respondWithError('No notes not found', 404, ['note' => 'No notes not found']);
         }
     }
 
@@ -119,15 +115,11 @@ class NoteController extends Controller
     {
         $note = Note::find($request->note);
         if (empty($note)) {
-            return response()->json([
-                'message' => 'Note not found'
-            ], 404);
+            return $this->respondWithError('Note not found', 404, ['note' => 'Note not found']);
         }
 
         if ($request->user()->cannot('view', $note)) {
-            return response()->json([
-                'message' => 'You do not own this note.'
-            ], 403);
+            return $this->respondWithError('You do not own this note', 403, ['ownership' => 'You do not own this note']);
         }
         return new NoteResource($note);
     }
@@ -164,9 +156,7 @@ class NoteController extends Controller
         if (!empty($notes[0])){
             return new NoteCollection($notes);
         }
-        return response()->json([
-            'message' => 'Notes with tag(s) not found'
-        ], 404);
+        return $this->respondWithError('Notes with tag(s) not found', 404, ['note' => 'Notes not found']);
     }
 
 
@@ -199,15 +189,11 @@ class NoteController extends Controller
         $note = Note::find($request->note);
 
         if (empty($note)) {
-            return response()->json([
-                'message' => 'Note not found'
-            ], 404);
+            return $this->respondWithError('Note not found', 404, ['note' => 'Note not found']);
         }
 
         if ($request->user()->cannot('update', $note)) {
-            return response()->json([
-                'message' => 'You do not own this note.'
-            ], 403);
+            return $this->respondWithError('You do not own this note', 403, ['ownership' => 'You do not own this note']);
         }
 
         if ($request->filled('title')) {
@@ -247,15 +233,15 @@ class NoteController extends Controller
     {
         $note = Note::find($request->note);
         if (empty($note)) {
-            return response()->json([
-                'message' => 'Note not found'
-            ], 404);
+            return $this->respondWithError('Note not found', 404, ['note' => 'Note not found']);
         }
 
         if ($request->user()->cannot('delete', $note)) {
-            return response()->json([
-                'message' => 'You do not own this note.'
-            ], 403);
+            return $this->respondWithError('You do not own this note', 403, ['ownership' => 'You do not own this note']);
+        }
+
+        if (!empty($note->noteTags())) {
+            $note->noteTags()->delete();
         }
 
         $note->delete();

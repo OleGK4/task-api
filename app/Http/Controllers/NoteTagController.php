@@ -33,15 +33,11 @@ class NoteTagController extends Controller
     {
         $note = Note::find($request->note);
         if (empty($note)) {
-            return response()->json([
-                'message' => 'Note not found'
-            ], 404);
+            return $this->respondWithError('Note not found', 404, ['note' => 'Note not found']);
         }
 
         if ($request->user()->cannot('view', $note)) {
-            return response()->json([
-                'message' => 'You do not own this note.'
-            ], 403);
+            return $this->respondWithError('You do not own this note', 403, ['ownership' => 'You do not own this note']);
         }
         $noteTags = NoteTag::where('note_id', $request->note)->paginate(5);
         return new NoteTagCollection($noteTags);
@@ -75,15 +71,11 @@ class NoteTagController extends Controller
         $note = Note::find($request->note);
 
         if (empty($note)) {
-            return response()->json([
-                'message' => 'Note not found'
-            ], 404);
+            return $this->respondWithError('Note not found', 404, ['note' => 'Note not found']);
         }
 
         if ($request->user()->cannot('update', $note)) {
-            return response()->json([
-                'message' => 'You do not own this note.'
-            ], 403);
+            return $this->respondWithError('You do not own this note', 403, ['ownership' => 'You do not own this note']);
         }
 
         $tag = Tag::create([
@@ -119,22 +111,16 @@ class NoteTagController extends Controller
     {
         $note = Note::find($request->note);
         if (empty($note)) {
-            return response()->json([
-                'message' => 'Note not found'
-            ], 404);
+            return $this->respondWithError('Note not found', 404, ['note' => 'Note not found']);
         }
 
         if ($request->user()->cannot('view', $note)) {
-            return response()->json([
-                'message' => 'You do not own this note.'
-            ], 403);
+            return $this->respondWithError('You do not own this note', 403, ['ownership' => 'You do not own this note']);
         }
 
         $noteTag = NoteTag::find($request->tag);
         if (empty($noteTag)) {
-            return response()->json([
-                'message' => 'Tag not found'
-            ], 404);
+            return $this->respondWithError('Tag not found', 404, ['tag' => 'Tag not found']);
         }
         return new NoteTagResource($noteTag);
     }
@@ -159,15 +145,11 @@ class NoteTagController extends Controller
     {
         $note = Note::find($request->note);
         if (empty($note)) {
-            return response()->json([
-                'message' => 'Note not found'
-            ], 404);
+            return $this->respondWithError('Note not found', 404, ['note' => 'Note not found']);
         }
 
         if ($request->user()->cannot('delete', $note)) {
-            return response()->json([
-                'message' => 'You do not own this note.'
-            ], 403);
+            return $this->respondWithError('You do not own this note', 403, ['ownership' => 'You do not own this note']);
         }
 
         $noteTag = NoteTag::find($request->tag);
@@ -179,8 +161,6 @@ class NoteTagController extends Controller
                 'message' => 'Tag deleted'
             ], 200);
         }
-        return response()->json([
-            'message' => 'Tag not found'
-        ], 404);
+        return $this->respondWithError('Tag not found', 404, ['tag' => 'Tag not found']);
     }
 }
